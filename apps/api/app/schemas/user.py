@@ -6,13 +6,13 @@ from pydantic import BaseModel, EmailStr
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    display_name: str | None = None
+    display_name: str
 
 
 class UserResponse(BaseModel):
     id: UUID
     email: EmailStr
-    display_name: str | None
+    display_name: str
     is_active: bool
     email_verified: bool
 

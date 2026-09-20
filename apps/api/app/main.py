@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.auth.router import router as auth_router
 
 app = FastAPI()
+app.include_router(auth_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,22 +19,3 @@ app.add_middleware(
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
-
-
-@router.post("/register")
-def register(data: UserCreate):
-    # 1. Check email isn't already registered
-
-    # 2. Hash password
-    hashed = hash_password(data.password)
-
-    # 3. Create User
-    user = User(
-        email=data.email,
-        password_hash=hashed,
-        display_name=data.display_name,
-    )
-
-    # 4. Save to database
-
-    # 5. Return safe UserResponse

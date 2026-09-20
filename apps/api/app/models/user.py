@@ -29,8 +29,9 @@ class User(Base):
         nullable=False,
     )
 
-    display_name: Mapped[str | None] = mapped_column(
+    display_name: Mapped[str] = mapped_column(
         String(100),
+        nullable=False,
     )
 
     is_active: Mapped[bool] = mapped_column(
@@ -56,3 +57,4 @@ class User(Base):
         server_default=func.now(),
         nullable=False,
     )
+    
