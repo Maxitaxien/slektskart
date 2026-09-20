@@ -15,3 +15,18 @@ dependencies = [
     "sqlalchemy>=2.0.54",
     "uvicorn>=0.53.0",
 ]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.0",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+  testpaths = ["tests"]
+  pythonpath = ["."]
+
+filterwarnings = [
+    'ignore:Using `httpx` with `starlette.testclient` is deprecated:starlette.exceptions.StarletteDeprecationWarning',
+    'ignore:The anyio\.abc\.BlockingPortal alias is deprecated:DeprecationWarning:starlette\.testclient',
+]
