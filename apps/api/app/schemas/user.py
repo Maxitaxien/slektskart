@@ -8,7 +8,6 @@ class UserCreate(BaseModel):
     password: str
     display_name: str
 
-
 class UserResponse(BaseModel):
     id: UUID
     email: EmailStr
