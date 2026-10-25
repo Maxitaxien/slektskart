@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { api } from "@/api/client";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   useEffect(() => {
@@ -12,7 +13,7 @@ function App() {
     testApi();
   }, []);
 
-  return <h1>API test</h1>;
+  return <AppRoutes />;
 }
 
 export default App;
