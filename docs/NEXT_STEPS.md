@@ -1,8 +1,7 @@
 # Next step
 
-Build the login UI flow:
+Finish the authentication form feedback:
 
-1. Add visible fields and a submit button to `LoginForm`.
-2. Send the form data to `POST /api/auth/login`.
-3. Store the returned access token in React state.
-4. Call `GET /api/auth/me` with `Authorization: Bearer <token>` and display the user.
+1. Clean up the unused `UserCreate` type and minor route leftovers.
+2. Show success and API error states after registration.
+3. Decide where to navigate after successful registration.
