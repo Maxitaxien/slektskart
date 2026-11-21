@@ -8,6 +8,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomeRoute />}>
+        <Route index element={<LoginRoute />} />
         <Route path="/login" element={<LoginRoute />} />
         <Route path="/register" element={<RegisterRoute />} />
       </Route>

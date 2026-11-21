@@ -17,21 +17,18 @@ export default function LoginForm() {
       }}
     >
       <TextEntry
-        placeholder={t("login.emailLabel")}
+        placeholder={t("shared.emailLabel")}
         type="email"
         value={email}
         onChange={setEmail}
       />
       <TextEntry
-        placeholder={t("login.passwordLabel")}
+        placeholder={t("shared.passwordLabel")}
         type="password"
         value={password}
         onChange={setPassword}
       />
-      <button
-        className="bg-lightbrown mt-4 p-2 rounded-md"
-        onClick={() => handleLogin("emailDummy", "passwordDummy")}
-      >
+      <button className="bg-lightbrown mt-4 p-2 rounded-md">
         {t("login.submit")}
       </button>
     </form>

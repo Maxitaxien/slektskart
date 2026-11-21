@@ -1,6 +1,7 @@
 {
   "home": {
     "loginButton": "Logg inn",
-    "registerButton": "Registrer deg"
+    "registerButton": "Registrer deg",
+    "backButton": "Tilbake"
   }
 }
