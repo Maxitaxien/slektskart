@@ -1,16 +1,25 @@
+import os
+
+from dotenv import load_dotenv
+
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.schemas.user import UserResponse, UserCreate 
-from app.schemas.auth import UserLogin, TokenResponse
+from app.schemas.auth import UserLogin
 from app.models.user import User
 from app.auth.dependencies import get_current_user, get_db
 from app.auth.hashing import hash_password, verify_password
 from app.auth.tokens import create_access_token
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+load_dotenv()
+
+SECURE_TOKEN_COOKIE = bool(os.getenv("SECURE_TOKEN_COOKIE", True))
+MAX_AGE = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")) * 60 # convert to seconds for max_age
 
 
 @router.post("/register", response_model=UserResponse, status_code=201)
@@ -47,8 +56,8 @@ def register(data: UserCreate, db: Session = Depends(get_db)):
         email_verified=user.email_verified
     )
 
-@router.post("/login", response_model=TokenResponse, status_code=200)
-def login(data: UserLogin, db: Session = Depends(get_db)):
+@router.post("/login", status_code=200)
+def login(data: UserLogin, response: Response, db: Session = Depends(get_db)):
     user = db.scalar(
         select(User).where(User.email == data.email)
     )
@@ -56,10 +65,30 @@ def login(data: UserLogin, db: Session = Depends(get_db)):
     if user is None or not user.is_active or not(verify_password(data.password, user.password_hash)):
         raise HTTPException(status_code=401, detail="Feil epost eller passord")
 
-    return TokenResponse(
-        access_token=create_access_token(user.id),
+    token = create_access_token(user.id)
+
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        secure=SECURE_TOKEN_COOKIE,
+        samesite="lax",
+        path="/",
+        max_age=MAX_AGE
     )
 
+    return {"message": "Login successful"}
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(
+        key="access_token",
+        path="/"
+    )
+
+    return {
+        "message": "Logged out successfully"
+    }
 
 @router.get("/me", response_model=UserResponse)
 def read_me(current_user: Annotated[User, Depends(get_current_user)]):

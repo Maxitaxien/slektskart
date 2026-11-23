@@ -1,10 +1,5 @@
 import { api } from "./client";
 
-interface TokenResponse {
-  access_token: string;
-  token_type: string;
-}
-
 interface UserCreate {
   email: string;
   password: string;
@@ -14,9 +9,10 @@ interface UserCreate {
 export async function handleLogin(
   email: string,
   password: string,
-): Promise<TokenResponse> {
-  const response: TokenResponse = await api("/api/auth/login", {
+): Promise<boolean> {
+  const response: Response = await api("/api/auth/login", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -26,8 +22,7 @@ export async function handleLogin(
     }),
   });
 
-  console.log(response);
-  return response;
+  return response.ok;
 }
 
 export async function handleRegister(

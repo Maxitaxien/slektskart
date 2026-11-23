@@ -2,14 +2,11 @@ from typing import Annotated
 
 from app.database import SessionLocal
 from app.models.user import User
-from fastapi import Depends
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import Depends, Cookie
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy.orm import Session
 from app.auth.tokens import decode_access_token
 from app.auth.exceptions import credentials_exception
-
-bearer_scheme = HTTPBearer(auto_error=False)
 
 def get_db():
     db = SessionLocal()
@@ -19,15 +16,14 @@ def get_db():
         db.close()
 
 def get_current_user(
-        credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
-        db: Annotated[Session, Depends(get_db)]
+        db: Annotated[Session, Depends(get_db)],
+        access_token: str | None = Cookie(default=None)
     ) -> User:
-
-    if credentials is None:
+    if not access_token:
         raise credentials_exception
     
     try:
-        user_id = decode_access_token(credentials.credentials)
+        user_id = decode_access_token(access_token)
     except (InvalidTokenError, ValueError):
         raise credentials_exception
 
